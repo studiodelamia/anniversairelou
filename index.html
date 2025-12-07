@@ -16,6 +16,12 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             overflow: hidden;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+        }
+        
+        html {
+            height: -webkit-fill-available;
         }
 
         .container {
@@ -29,26 +35,29 @@
 
         .birthdate-screen {
             background: white;
-            padding: 40px;
+            padding: 30px 20px;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             text-align: center;
-            max-width: 400px;
+            max-width: 90%;
+            width: 400px;
+            margin: 0 15px;
         }
 
         .birthdate-screen h1 {
             color: #667eea;
             margin-bottom: 20px;
-            font-size: 2em;
+            font-size: clamp(1.5em, 5vw, 2em);
         }
 
         .birthdate-screen input {
             width: 100%;
             padding: 15px;
-            font-size: 16px;
+            font-size: clamp(14px, 4vw, 16px);
             border: 2px solid #667eea;
             border-radius: 10px;
             margin: 20px 0;
+            box-sizing: border-box;
         }
 
         .birthdate-screen button {
@@ -201,7 +210,7 @@
         let candleLit = true;
 
         // Set the correct birthdate here (YYYY-MM-DD format)
-        const CORRECT_BIRTHDATE = '2001-12-09'; // Change this to your friend's birthdate
+        const CORRECT_BIRTHDATE = '2001-12-09'; // December 9, 2001
 
         function checkBirthdate() {
             const input = document.getElementById('birthdateInput').value;
