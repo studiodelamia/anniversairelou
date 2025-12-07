@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 🎂</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .birthdate-screen {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .birthdate-screen h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .birthdate-screen input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .birthdate-screen button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .birthdate-screen button:hover {
+            transform: scale(1.05);
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        #cakeScene {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        #blowInstruction {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.9);
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 20px;
+            color: #667eea;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+            z-index: 10;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        #messageCard {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            text-align: center;
+            animation: slideIn 1s ease-out;
+            z-index: 100;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        #messageCard h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        #messageCard p {
+            color: #333;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Birthdate Entry Screen -->
+        <div class="birthdate-screen" id="birthdateScreen">
+            <h1>🎉 Enter Your Birthdate 🎉</h1>
+            <input type="date" id="birthdateInput" placeholder="MM/DD/YYYY">
+            <button onclick="checkBirthdate()">Continue</button>
+            <div class="error" id="error"></div>
+        </div>
+
+        <!-- Cake Scene -->
+        <div id="cakeScene"></div>
+        <div id="blowInstruction" style="display: none;">
+            🎤 Blow into your microphone to blow out the candles! 🎂
+        </div>
+
+        <!-- Birthday Message Card -->
+        <div id="messageCard">
+            <h2>Happy Birthday! 🎂</h2>
+            <p>
+                Dear [Friend's Name],<br><br>
+                
+                Happy Birthday to someone who makes every day brighter! 🌟
+                
+                I hope this year brings you endless joy, amazing adventures, 
+                and all the happiness you deserve. Thank you for being such 
+                an incredible friend. Here's to celebrating you today and always!<br><br>
+                
+                Wishing you the best birthday ever! 🎉🎈<br><br>
+                
+                With love,<br>
+                [Your Name]
+            </p>
+        </div>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        let scene, camera, renderer, flame;
+        let audioContext, analyser, microphone;
+        let candleLit = true;
+
+        // Set the correct birthdate here (YYYY-MM-DD format)
+        const CORRECT_BIRTHDATE = '2000-01-15'; // Change this to your friend's birthdate
+
+        function checkBirthdate() {
+            const input = document.getElementById('birthdateInput').value;
+            const error = document.getElementById('error');
+            
+            if (!input) {
+                error.textContent = 'Please enter a date';
+                return;
+            }
+
+            if (input === CORRECT_BIRTHDATE) {
+                document.getElementById('birthdateScreen').style.display = 'none';
+                startBirthdayExperience();
+            } else {
+                error.textContent = 'Hmm, that doesn\'t seem right. Try again! 🤔';
+            }
+        }
+
+        function startBirthdayExperience() {
+            document.getElementById('cakeScene').style.display = 'block';
+            document.getElementById('blowInstruction').style.display = 'block';
+            
+            // Play background music
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log('Audio play failed:', e));
+
+            // Initialize Three.js scene
+            initScene();
+            animate();
+
+            // Request microphone access
+            requestMicrophoneAccess();
+        }
+
+        function initScene() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('cakeScene').appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xffffff, 0.8);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+
+            // Create a simple cake
+            const cakeGeometry = new THREE.CylinderGeometry(2, 2, 1.5, 32);
+            const cakeMaterial = new THREE.MeshPhongMaterial({ color: 0xffb6c1 });
+            const cake = new THREE.Mesh(cakeGeometry, cakeMaterial);
+            cake.position.y = -1;
+            scene.add(cake);
+
+            // Cake frosting layer
+            const frostingGeometry = new THREE.CylinderGeometry(2.1, 2.1, 0.3, 32);
+            const frostingMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+            const frosting = new THREE.Mesh(frostingGeometry, frostingMaterial);
+            frosting.position.y = -0.35;
+            scene.add(frosting);
+
+            // Create candle
+            const candleGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 16);
+            const candleMaterial = new THREE.MeshPhongMaterial({ color: 0xffff00 });
+            const candle = new THREE.Mesh(candleGeometry, candleMaterial);
+            candle.position.y = 0.2;
+            scene.add(candle);
+
+            // Create flame
+            const flameGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+            const flameMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xff6600,
+                transparent: true,
+                opacity: 0.9
+            });
+            flame = new THREE.Mesh(flameGeometry, flameMaterial);
+            flame.position.y = 0.85;
+            scene.add(flame);
+
+            // Add flame glow
+            const glowGeometry = new THREE.SphereGeometry(0.25, 16, 16);
+            const glowMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xffaa00,
+                transparent: true,
+                opacity: 0.3
+            });
+            const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+            flame.add(glow);
+
+            camera.position.z = 6;
+            camera.position.y = 1;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate flame flicker
+            if (candleLit && flame) {
+                flame.scale.y = 1 + Math.sin(Date.now() * 0.01) * 0.1;
+                flame.position.y = 0.85 + Math.sin(Date.now() * 0.008) * 0.05;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        async function requestMicrophoneAccess() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+                analyser.fftSize = 256;
+
+                detectBlow();
+            } catch (err) {
+                console.error('Microphone access denied:', err);
+                document.getElementById('blowInstruction').textContent = 'Click here to blow out the candles!';
+                document.getElementById('blowInstruction').style.cursor = 'pointer';
+                document.getElementById('blowInstruction').onclick = blowOutCandles;
+            }
+        }
+
+        function detectBlow() {
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function check() {
+                if (!candleLit) return;
+
+                analyser.getByteFrequencyData(dataArray);
+                const average = dataArray.reduce((a, b) => a + b) / bufferLength;
+
+                // Detect blow (loud sound)
+                if (average > 50) {
+                    blowOutCandles();
+                    return;
+                }
+
+                requestAnimationFrame(check);
+            }
+
+            check();
+        }
+
+        function blowOutCandles() {
+            if (!candleLit) return;
+            
+            candleLit = false;
+            
+            // Hide flame
+            flame.visible = false;
+            document.getElementById('blowInstruction').style.display = 'none';
+
+            // Create confetti
+            createConfetti();
+
+            // Show message after delay
+            setTimeout(() => {
+                document.getElementById('messageCard').style.display = 'block';
+            }, 2000);
+        }
+
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500'];
+            
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    confetti.style.animationDelay = '0s';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 30);
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        });
+    </script>
+</body>
+</html>
