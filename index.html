@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyeux anniversaire ma vieeeeee!!!!!! 🎂</title>
+    <title>Happy Birthday! 🎂</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         @font-face {
@@ -388,8 +388,8 @@
     </div>
 
     <!-- Background Music -->
-    <audio id="bgMusic" loop>
-        <source src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" type="audio/mpeg">
+    <audio id="bgMusic">
+        <source src="music/HAPPY BİRTHDAY ARABİC.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -400,17 +400,17 @@
         const CORRECT_BIRTHDATE = '2001-12-09';
 
         const imageFiles = [
-            'IMG_9848.jpeg',
-            '1e6fce1-0900-42cc-a039-4237e71210a8.JPG',
-            '9A8801AF-448E-4FA4-B070-d3DC1A904439.JPG',
-            '198c5561-6c28-4a9e-a84a-1c67aaa6aa7a.JPG',
-            'b9ae4429-9128-4186-8e25-a4ccd7d5d5.JPG',
-            'cfee84cd-3215-449c-981c-8525671aea9.JPG',
-            'D5FC2489-7403-4E54-B536-2DA176570b4A.JPG',
-            'd6823de1-6e16-4224-9081-fe17215936f.JPG',
+            '198c4561-6e20-4e9e-a84a-1c67aaa6aa7a.JPG',
+            '1e6fcee1-0900-42ec-a039-4237e71210eb.JPG',
+            '9A8B01AF-448E-4FA4-B070-63DC1A904439.JPG',
+            'D5FC2489-FA03-4E54-B536-2DA17657D84A.JPG',
             'IMG_0043.jpeg',
             'IMG_2253.jpeg',
-            'IMG_2832.jpeg'
+            'IMG_2832.jpeg',
+            'IMG_9848.jpeg',
+            'b9ae4429-9128-4186-8e25-e4cfcd7c45d5.JPG',
+            'cfae64cd-3215-44fe-981c-852a571aeae9.JPG',
+            'd2823de1-6e16-4224-9081-fe1721593f6f.JPG'
         ];
 
         function checkBirthdate() {
@@ -433,9 +433,6 @@
         function startBirthdayExperience() {
             document.getElementById('cakeScene').style.display = 'block';
             document.getElementById('blowInstruction').style.display = 'block';
-            
-            const music = document.getElementById('bgMusic');
-            music.play().catch(e => console.log('Audio play failed:', e));
 
             initScene();
             animate();
@@ -553,6 +550,10 @@
             candleLit = false;
             flame.visible = false;
             document.getElementById('blowInstruction').style.display = 'none';
+
+            // Play birthday music
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log('Audio play failed:', e));
 
             createConfetti();
             
