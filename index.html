@@ -73,11 +73,11 @@
         }
 
         .birthdate-screen {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(10px);
+            background: transparent;
+            backdrop-filter: none;
             padding: 30px 20px;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: none;
             text-align: center;
             max-width: 80%;
             width: 340px;
@@ -381,7 +381,7 @@
     <div class="container">
         <!-- Birthdate Entry Screen -->
         <div class="birthdate-screen" id="birthdateScreen">
-            <h1>🎉 Enter Your Birthdate 🎉</h1>
+            <h1>✨ Birthdate of a diva ✨</h1>
             <input type="date" id="birthdateInput" placeholder="MM/DD/YYYY">
             <button onclick="checkBirthdate()">Continue</button>
             <div class="error" id="error"></div>
@@ -390,7 +390,7 @@
         <!-- Cake Scene -->
         <div id="cakeScene"></div>
         <div id="blowInstruction" style="display: none;">
-            🎤 Souffle dans le micro ma star internationale ! 🎂
+            🎤 Blow into your microphone to blow out the candles! 🎂
         </div>
     </div>
 
@@ -407,7 +407,7 @@
     <!-- Letter Content -->
     <div class="letter-content" id="letterContent">
         <button class="close-letter" onclick="closeLetter()">×</button>
-        <h2>Joyeux anniversaire ma vieee ! 🎂</h2>
+        <h2>Happy Birthday! 🎂</h2>
         <p>
             Dear [Friend's Name],<br><br>
             
