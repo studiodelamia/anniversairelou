@@ -3,25 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyeux anniversaire ma vieeeee! 🎂</title>
+    <title>Joyeux anniversaire ma vieeeeee!!!!!! 🎂</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
+        @font-face {
+            font-family: 'Chocolate';
+            src: url('font/Chocolate.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Mindway';
+            src: url('font/Mindway.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            height: -webkit-fill-available;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Mindway', 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             overflow: hidden;
             min-height: 100vh;
             min-height: -webkit-fill-available;
-        }
-        
-        html {
-            height: -webkit-fill-available;
         }
 
         .container {
@@ -45,6 +59,7 @@
         }
 
         .birthdate-screen h1 {
+            font-family: 'Chocolate', cursive;
             color: #667eea;
             margin-bottom: 20px;
             font-size: clamp(1.5em, 5vw, 2em);
@@ -58,6 +73,7 @@
             border-radius: 10px;
             margin: 20px 0;
             box-sizing: border-box;
+            font-family: 'Mindway', sans-serif;
         }
 
         .birthdate-screen button {
@@ -70,6 +86,7 @@
             border-radius: 10px;
             cursor: pointer;
             transition: transform 0.2s;
+            font-family: 'Chocolate', cursive;
         }
 
         .birthdate-screen button:hover {
@@ -90,17 +107,20 @@
 
         #blowInstruction {
             position: absolute;
-            top: 50px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(255,255,255,0.9);
-            padding: 20px 40px;
+            padding: 15px 25px;
             border-radius: 15px;
-            font-size: 20px;
+            font-size: clamp(14px, 4vw, 20px);
             color: #667eea;
             font-weight: bold;
             animation: pulse 2s infinite;
             z-index: 10;
+            max-width: 90%;
+            text-align: center;
+            box-sizing: border-box;
         }
 
         @keyframes pulse {
@@ -114,6 +134,7 @@
             height: 10px;
             background: #f0f;
             animation: fall linear forwards;
+            z-index: 5;
         }
 
         @keyframes fall {
@@ -123,43 +144,199 @@
             }
         }
 
-        #messageCard {
-            display: none;
+        .polaroid {
             position: absolute;
+            background: white;
+            padding: 10px;
+            padding-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transform: rotate(0deg);
+            animation: polaroidFloat 4s ease-out forwards;
+            z-index: 20;
+            max-width: 200px;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        @keyframes polaroidFloat {
+            0% {
+                top: -300px;
+                opacity: 0;
+                transform: rotate(0deg) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+                transform: rotate(var(--rotation)) scale(1);
+            }
+        }
+
+        .letter-container {
+            position: absolute;
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: letterDrop 2s ease-out forwards;
+            animation-delay: 3s;
+            z-index: 100;
+            cursor: pointer;
+        }
+
+        @keyframes letterDrop {
+            0% {
+                top: -300px;
+                transform: translateX(-50%) rotate(-10deg);
+            }
+            60% {
+                top: 45%;
+                transform: translateX(-50%) rotate(5deg);
+            }
+            80% {
+                top: 42%;
+                transform: translateX(-50%) rotate(-3deg);
+            }
+            100% {
+                top: 43%;
+                transform: translateX(-50%) rotate(0deg);
+            }
+        }
+
+        .envelope {
+            position: relative;
+            width: 120px;
+            height: 80px;
+            background: #f4e4c1;
+            border-radius: 5px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+
+        .envelope:hover {
+            transform: scale(1.1);
+        }
+
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-top: 40px solid #d4b896;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            animation: badgePulse 1s infinite;
+            box-shadow: 0 2px 8px rgba(255,71,87,0.5);
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .letter-content {
+            display: none;
+            position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0);
             background: white;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 500px;
-            text-align: center;
-            animation: slideIn 1s ease-out;
-            z-index: 100;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            max-width: 90%;
+            width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 200;
+            animation: letterOpen 0.5s ease-out forwards;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -40%);
-            }
+        @keyframes letterOpen {
             to {
-                opacity: 1;
-                transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%) scale(1);
             }
         }
 
-        #messageCard h2 {
+        .letter-content.show {
+            display: block;
+        }
+
+        .letter-content h2 {
+            font-family: 'Chocolate', cursive;
             color: #667eea;
             margin-bottom: 20px;
-            font-size: 2.5em;
+            font-size: clamp(2em, 6vw, 3em);
+            text-align: center;
         }
 
-        #messageCard p {
+        .letter-content p {
+            font-family: 'Mindway', sans-serif;
             color: #333;
             line-height: 1.8;
-            font-size: 18px;
+            font-size: clamp(16px, 4vw, 20px);
+            text-align: left;
+        }
+
+        .close-letter {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .close-letter:hover {
+            background: #764ba2;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 150;
+        }
+
+        .overlay.show {
+            display: block;
         }
     </style>
 </head>
@@ -178,25 +355,36 @@
         <div id="blowInstruction" style="display: none;">
             🎤 Blow into your microphone to blow out the candles! 🎂
         </div>
+    </div>
 
-        <!-- Birthday Message Card -->
-        <div id="messageCard">
-            <h2>Happy Birthday! 🎂</h2>
-            <p>
-                Dear [Friend's Name],<br><br>
-                
-                Happy Birthday to someone who makes every day brighter! 🌟
-                
-                I hope this year brings you endless joy, amazing adventures, 
-                and all the happiness you deserve. Thank you for being such 
-                an incredible friend. Here's to celebrating you today and always!<br><br>
-                
-                Wishing you the best birthday ever! 🎉🎈<br><br>
-                
-                With love,<br>
-                [Your Name]
-            </p>
+    <!-- Letter Container -->
+    <div class="letter-container" id="letterContainer" style="display: none;" onclick="openLetter()">
+        <div class="envelope">
+            <div class="notification-badge">1</div>
         </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closeLetter()"></div>
+
+    <!-- Letter Content -->
+    <div class="letter-content" id="letterContent">
+        <button class="close-letter" onclick="closeLetter()">×</button>
+        <h2>Happy Birthday! 🎂</h2>
+        <p>
+            Dear [Friend's Name],<br><br>
+            
+            Happy Birthday to someone who makes every day brighter! 🌟
+            
+            I hope this year brings you endless joy, amazing adventures, 
+            and all the happiness you deserve. Thank you for being such 
+            an incredible friend. Here's to celebrating you today and always!<br><br>
+            
+            Wishing you the best birthday ever! 🎉🎈<br><br>
+            
+            With love,<br>
+            [Your Name]
+        </p>
     </div>
 
     <!-- Background Music -->
@@ -209,8 +397,21 @@
         let audioContext, analyser, microphone;
         let candleLit = true;
 
-        // Set the correct birthdate here (YYYY-MM-DD format)
-        const CORRECT_BIRTHDATE = '2001-12-09'; // December 9, 2001
+        const CORRECT_BIRTHDATE = '2001-12-09';
+
+        const imageFiles = [
+            'IMG_9848.jpeg',
+            '1e6fce1-0900-42cc-a039-4237e71210a8.JPG',
+            '9A8801AF-448E-4FA4-B070-d3DC1A904439.JPG',
+            '198c5561-6c28-4a9e-a84a-1c67aaa6aa7a.JPG',
+            'b9ae4429-9128-4186-8e25-a4ccd7d5d5.JPG',
+            'cfee84cd-3215-449c-981c-8525671aea9.JPG',
+            'D5FC2489-7403-4E54-B536-2DA176570b4A.JPG',
+            'd6823de1-6e16-4224-9081-fe17215936f.JPG',
+            'IMG_0043.jpeg',
+            'IMG_2253.jpeg',
+            'IMG_2832.jpeg'
+        ];
 
         function checkBirthdate() {
             const input = document.getElementById('birthdateInput').value;
@@ -233,15 +434,11 @@
             document.getElementById('cakeScene').style.display = 'block';
             document.getElementById('blowInstruction').style.display = 'block';
             
-            // Play background music
             const music = document.getElementById('bgMusic');
             music.play().catch(e => console.log('Audio play failed:', e));
 
-            // Initialize Three.js scene
             initScene();
             animate();
-
-            // Request microphone access
             requestMicrophoneAccess();
         }
 
@@ -252,7 +449,6 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.getElementById('cakeScene').appendChild(renderer.domElement);
 
-            // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
 
@@ -260,28 +456,24 @@
             pointLight.position.set(5, 5, 5);
             scene.add(pointLight);
 
-            // Create a simple cake
             const cakeGeometry = new THREE.CylinderGeometry(2, 2, 1.5, 32);
             const cakeMaterial = new THREE.MeshPhongMaterial({ color: 0xffb6c1 });
             const cake = new THREE.Mesh(cakeGeometry, cakeMaterial);
             cake.position.y = -1;
             scene.add(cake);
 
-            // Cake frosting layer
             const frostingGeometry = new THREE.CylinderGeometry(2.1, 2.1, 0.3, 32);
             const frostingMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
             const frosting = new THREE.Mesh(frostingGeometry, frostingMaterial);
             frosting.position.y = -0.35;
             scene.add(frosting);
 
-            // Create candle
             const candleGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 16);
             const candleMaterial = new THREE.MeshPhongMaterial({ color: 0xffff00 });
             const candle = new THREE.Mesh(candleGeometry, candleMaterial);
             candle.position.y = 0.2;
             scene.add(candle);
 
-            // Create flame
             const flameGeometry = new THREE.SphereGeometry(0.15, 16, 16);
             const flameMaterial = new THREE.MeshBasicMaterial({ 
                 color: 0xff6600,
@@ -292,7 +484,6 @@
             flame.position.y = 0.85;
             scene.add(flame);
 
-            // Add flame glow
             const glowGeometry = new THREE.SphereGeometry(0.25, 16, 16);
             const glowMaterial = new THREE.MeshBasicMaterial({ 
                 color: 0xffaa00,
@@ -309,7 +500,6 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // Animate flame flicker
             if (candleLit && flame) {
                 flame.scale.y = 1 + Math.sin(Date.now() * 0.01) * 0.1;
                 flame.position.y = 0.85 + Math.sin(Date.now() * 0.008) * 0.05;
@@ -346,7 +536,6 @@
                 analyser.getByteFrequencyData(dataArray);
                 const average = dataArray.reduce((a, b) => a + b) / bufferLength;
 
-                // Detect blow (loud sound)
                 if (average > 50) {
                     blowOutCandles();
                     return;
@@ -362,18 +551,18 @@
             if (!candleLit) return;
             
             candleLit = false;
-            
-            // Hide flame
             flame.visible = false;
             document.getElementById('blowInstruction').style.display = 'none';
 
-            // Create confetti
             createConfetti();
-
-            // Show message after delay
+            
             setTimeout(() => {
-                document.getElementById('messageCard').style.display = 'block';
-            }, 2000);
+                createPolaroids();
+            }, 1000);
+
+            setTimeout(() => {
+                document.getElementById('letterContainer').style.display = 'block';
+            }, 3000);
         }
 
         function createConfetti() {
@@ -386,7 +575,6 @@
                     confetti.style.left = Math.random() * 100 + '%';
                     confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
                     confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                    confetti.style.animationDelay = '0s';
                     document.body.appendChild(confetti);
 
                     setTimeout(() => confetti.remove(), 5000);
@@ -394,7 +582,57 @@
             }
         }
 
-        // Handle window resize
+        function createPolaroids() {
+            const positions = [
+                { top: '15%', left: '10%', rotation: '-8deg' },
+                { top: '25%', left: '75%', rotation: '12deg' },
+                { top: '45%', left: '5%', rotation: '5deg' },
+                { top: '55%', left: '80%', rotation: '-10deg' },
+                { top: '70%', left: '15%', rotation: '15deg' },
+                { top: '20%', left: '85%', rotation: '-5deg' },
+                { top: '60%', left: '70%', rotation: '8deg' },
+                { top: '35%', left: '40%', rotation: '-12deg' },
+                { top: '75%', left: '50%', rotation: '6deg' },
+                { top: '15%', left: '50%', rotation: '-15deg' },
+                { top: '80%', left: '85%', rotation: '10deg' }
+            ];
+
+            imageFiles.forEach((img, index) => {
+                setTimeout(() => {
+                    const polaroid = document.createElement('div');
+                    polaroid.className = 'polaroid';
+                    
+                    const position = positions[index] || { 
+                        top: Math.random() * 70 + '%', 
+                        left: Math.random() * 80 + '%', 
+                        rotation: (Math.random() * 30 - 15) + 'deg' 
+                    };
+                    
+                    polaroid.style.top = position.top;
+                    polaroid.style.left = position.left;
+                    polaroid.style.setProperty('--rotation', position.rotation);
+                    
+                    const image = document.createElement('img');
+                    image.src = `images/${img}`;
+                    image.alt = 'Memory';
+                    
+                    polaroid.appendChild(image);
+                    document.body.appendChild(polaroid);
+                }, index * 300);
+            });
+        }
+
+        function openLetter() {
+            document.getElementById('overlay').classList.add('show');
+            document.getElementById('letterContent').classList.add('show');
+            document.getElementById('letterContainer').style.display = 'none';
+        }
+
+        function closeLetter() {
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('letterContent').classList.remove('show');
+        }
+
         window.addEventListener('resize', () => {
             if (camera && renderer) {
                 camera.aspect = window.innerWidth / window.innerHeight;
